@@ -1,6 +1,6 @@
 import Foundation
 import SwiftUI
-import Combine   // ✅ REQUIRED for @Published and ObservableObject
+import Combine
 
 @MainActor
 final class PropertyFinderService: ObservableObject {
@@ -10,14 +10,15 @@ final class PropertyFinderService: ObservableObject {
 
     private let baseURL = "https://api.propertyfinder.ae/v1/property"
 
-    // MARK: - Load API Key from Config.plist
-    private func getAPIKey(for keyName: String) -> String {
+    // MARK: - Load API Key from Config.plist (non-fatal if missing)
+    private func getAPIKey(for keyName: String) -> String? {
         guard
             let path = Bundle.main.path(forResource: "Config", ofType: "plist"),
             let dict = NSDictionary(contentsOfFile: path),
-            let key = dict[keyName] as? String
+            let key = dict[keyName] as? String,
+            !key.isEmpty
         else {
-            fatalError("❌ Missing \(keyName) in Config.plist")
+            return nil
         }
         return key
     }
@@ -29,36 +30,59 @@ final class PropertyFinderService: ObservableObject {
             self.errorMessage = nil
         }
 
-        let apiKey = getAPIKey(for: "PROPERTY_FINDER_API_KEY")
-        guard let url = URL(string: "\(baseURL)?limit=\(limit)") else {
+        guard let apiKey = getAPIKey(for: "PROPERTY_FINDER_API_KEY"),
+              let url = URL(string: "\(baseURL)?limit=\(limit)") else {
             await MainActor.run {
-                self.errorMessage = "❌ Invalid API URL"
+                self.errorMessage = "Using demo data"
                 self.isLoading = false
+                self.useFallbackData(reason: "Missing API key or invalid URL")
             }
             return
         }
 
         var request = URLRequest(url: url)
         request.setValue("Bearer \(apiKey)", forHTTPHeaderField: "Authorization")
+        request.setValue("application/json", forHTTPHeaderField: "Accept")
         request.timeoutInterval = 30
 
         do {
             let (data, response) = try await URLSession.shared.data(for: request)
+
+            if let httpResponse = response as? HTTPURLResponse {
+                let preview = String(data: data, encoding: .utf8)?.prefix(800) ?? ""
+                print("PropertyFinder status: \(httpResponse.statusCode)")
+                print("Response preview:\n\(preview)\n---")
+            }
+
             guard let httpResponse = response as? HTTPURLResponse,
-                  httpResponse.statusCode == 200 else {
+                  (200...299).contains(httpResponse.statusCode) else {
                 throw URLError(.badServerResponse)
             }
 
-            let decoded = try JSONDecoder().decode([Property].self, from: data)
-            await MainActor.run {
-                self.listings = decoded
-                self.isLoading = false
+            // Attempt to decode as a top-level array of Property.
+            do {
+                let decoded = try JSONDecoder().decode([Property].self, from: data)
+                await MainActor.run {
+                    self.listings = decoded
+                    self.isLoading = false
+                }
+            } catch {
+                // Log some helpful info and fall back.
+                print("Decoding error: \(error)")
+                if let jsonObject = try? JSONSerialization.jsonObject(with: data),
+                   let json = jsonObject as? [String: Any] {
+                    print("Top-level keys: \(Array(json.keys))")
+                }
+                await MainActor.run {
+                    self.errorMessage = "Using demo data"
+                    self.isLoading = false
+                    self.useFallbackData(reason: "Decoding failed: \(error.localizedDescription)")
+                }
             }
-
         } catch {
-            print("❌ API Fetch Error:", error.localizedDescription)
             await MainActor.run {
-                self.errorMessage = "Could not load data, using fallback"
+                print("Network error: \(error)")
+                self.errorMessage = "Using demo data"
                 self.isLoading = false
                 self.useFallbackData(reason: error.localizedDescription)
             }
@@ -67,6 +91,7 @@ final class PropertyFinderService: ObservableObject {
 
     // MARK: - Fallback demo data
     private func useFallbackData(reason: String) {
+        print("Using fallback data. Reason: \(reason)")
         self.listings = [
             Property(
                 id: 1,
@@ -110,18 +135,14 @@ final class PropertyFinderService: ObservableObject {
         ]
     }
 
-    // MARK: - Compatibility (completion-based)
+    // MARK: - Completion-based compatibility
     func fetchProperties(limit: Int = 20, completion: @escaping (Result<[Property], Error>) -> Void) {
         Task {
             await fetchProperties(limit: limit)
-            if let message = self.errorMessage {
-                let err = NSError(domain: "PropertyFinderService",
-                                  code: -1,
-                                  userInfo: [NSLocalizedDescriptionKey: message])
-                completion(.failure(err))
-            } else {
-                completion(.success(self.listings))
+            if self.listings.isEmpty {
+                self.useFallbackData(reason: "Empty result")
             }
+            completion(.success(self.listings))
         }
     }
 }

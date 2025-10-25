@@ -41,3 +41,24 @@ struct MainTabView: View {
         .tint(.yellow)
     }
 }
+
+// Temporary placeholder so the file compiles.
+// Replace with your real implementation when ready.
+private struct TeamView: View {
+    var body: some View {
+        NavigationStack {
+            VStack(spacing: 16) {
+                Image(systemName: "person.3.fill")
+                    .font(.system(size: 48))
+                    .foregroundStyle(.yellow)
+                Text("Our Team")
+                    .font(.title2).bold()
+                Text("Team details coming soon.")
+                    .foregroundStyle(.secondary)
+            }
+            .padding()
+            .navigationTitle("Team")
+        }
+    }
+    
+}

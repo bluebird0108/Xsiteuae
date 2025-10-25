@@ -8,17 +8,35 @@ final class XsiteAPIService: ObservableObject {
     private let baseURL = "https://xsite.ae/v1/property"
 
     func fetchProperties(completion: @escaping (Result<[Property], Error>) -> Void) {
-        guard let url = URL(string: baseURL) else { return }
+        guard let url = URL(string: baseURL) else {
+            let fallback = self.fallbackProperties()
+            DispatchQueue.main.async {
+                self.properties = fallback
+                completion(.success(fallback))
+            }
+            return
+        }
 
-        URLSession.shared.dataTask(with: url) { data, _, error in
+        URLSession.shared.dataTask(with: url) { data, response, error in
+            // If any error or bad response, deliver fallback
             if let error = error {
+                let fallback = self.fallbackProperties()
                 DispatchQueue.main.async {
-                    completion(.failure(error))
+                    self.properties = fallback
+                    completion(.success(fallback))
                 }
+                print("API error: \(error.localizedDescription). Using fallback.")
                 return
             }
 
-            guard let data = data else { return }
+            guard let http = response as? HTTPURLResponse, (200..<300).contains(http.statusCode), let data = data else {
+                let fallback = self.fallbackProperties()
+                DispatchQueue.main.async {
+                    self.properties = fallback
+                    completion(.success(fallback))
+                }
+                return
+            }
 
             do {
                 let properties = try JSONDecoder().decode([Property].self, from: data)
@@ -27,13 +45,14 @@ final class XsiteAPIService: ObservableObject {
                     completion(.success(properties))
                 }
             } catch {
+                let fallback = self.fallbackProperties()
                 DispatchQueue.main.async {
-                    completion(.failure(error))
+                    self.properties = fallback
+                    completion(.success(fallback))
                 }
             }
         }.resume()
     }
-}
 
     /// Mock fallback data (for offline or testing)
     func fallbackProperties() -> [Property] {
@@ -41,7 +60,7 @@ final class XsiteAPIService: ObservableObject {
             Property(
                 id: 1,
                 title: "Modern 2BR Apartment",
-                price: 1200000,
+                price: 1_200_000,
                 location: "Dubai Marina",
                 image: "https://picsum.photos/seed/marina/600/400",
                 bedrooms: 2,
@@ -54,7 +73,7 @@ final class XsiteAPIService: ObservableObject {
             Property(
                 id: 2,
                 title: "Luxury Villa in Palm Jumeirah",
-                price: 5200000,
+                price: 5_200_000,
                 location: "Palm Jumeirah, Dubai",
                 image: "https://picsum.photos/seed/palm/600/400",
                 bedrooms: 5,
@@ -66,3 +85,4 @@ final class XsiteAPIService: ObservableObject {
             )
         ]
     }
+}

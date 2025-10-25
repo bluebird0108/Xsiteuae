@@ -6,8 +6,28 @@
 	<dict>
 		<key>Xsiteuae.xcscheme_^#shared#^_</key>
 		<dict>
+			<key>isShown</key>
+			<true/>
 			<key>orderHint</key>
 			<integer>0</integer>
+		</dict>
+	</dict>
+	<key>SuppressBuildableAutocreation</key>
+	<dict>
+		<key>D03740FB2EAAACE8008A87FE</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>D037410A2EAAACEA008A87FE</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>D03741142EAAACEA008A87FE</key>
+		<dict>
+			<key>primary</key>
+			<true/>
 		</dict>
 	</dict>
 </dict>

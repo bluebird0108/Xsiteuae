@@ -21,7 +21,7 @@ struct AboutCompanyView: View {
                     Label("👥 Agents: 97 Registered", systemImage: "person.3.fill")
                 }
                 .padding()
-                .background(Color.gray.opacity(0.1))
+                .background(Color(.secondarySystemBackground))
                 .cornerRadius(12)
 
                 VStack(alignment: .leading, spacing: 6) {
@@ -42,6 +42,8 @@ struct AboutCompanyView: View {
 Xsite Real Estate Brokers LLC is a Dubai-based brokerage firm providing expert real estate services across the UAE. The company specializes in buying, selling, and leasing residential and commercial properties, with a strong focus on off-plan investments and portfolio advisory.
 
 Our professional team of 97 multilingual agents is registered with RERA and dedicated to providing transparent, customer-focused real estate solutions. We operate in prime communities including JVC, Meydan, Arjan, and Al Furjan — connecting investors and residents with the best opportunities in Dubai.
+
+Xsite also operates a dedicated Maintenance team and provides Holiday Homes services for landlords and guests, ensuring quality property care and premium short-stay experiences.
 """)
                         .font(.body)
                         .foregroundColor(.secondary)
@@ -67,16 +69,16 @@ Our professional team of 97 multilingual agents is registered with RERA and dedi
                     }
                 }
                 .padding()
-                .background(Color.gray.opacity(0.1))
+                .background(Color(.secondarySystemBackground))
                 .cornerRadius(12)
 
                 VStack(spacing: 4) {
                     Text("Licensed Real Estate Broker")
                         .font(.footnote)
-                        .foregroundColor(.gray)
+                        .foregroundColor(.secondary)
                     Text("App by Faraz Kazmi")
                         .font(.footnote)
-                        .foregroundColor(.gray)
+                        .foregroundColor(.secondary)
                 }
                 .padding(.top, 10)
             }

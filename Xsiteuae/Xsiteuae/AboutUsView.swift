@@ -4,17 +4,17 @@ struct AboutUsView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 16) {
-                // 🏢 Company Name
                 Text("Xsite Real Estate Brokers LLC")
                     .font(.title)
                     .fontWeight(.bold)
                     .padding(.top)
 
-                // 🏙 Description
                 Text("""
 Xsite Real Estate Brokers LLC is a Dubai-based brokerage established in 2023 with over 97 dedicated agents. We specialize in Ready, Off-Plan, and Leasing services across prime locations such as JVC, Meydan, Arjan, and Al Furjan.
 
 Our mission is to connect investors and residents with the best property opportunities in the UAE, ensuring transparency, trust, and exceptional service.
+
+Xsite also has a dedicated Maintenance team and offers professional Holiday Homes services for landlords and guests across the UAE.
 """)
                 .font(.body)
                 .foregroundColor(.secondary)
@@ -22,7 +22,6 @@ Our mission is to connect investors and residents with the best property opportu
 
                 Divider().padding(.vertical)
 
-                // 📞 Contact Info
                 VStack(alignment: .leading, spacing: 8) {
                     Text("📧 Email: info@xsite.ae")
                     Text("🌍 Website: www.xsite.ae")
