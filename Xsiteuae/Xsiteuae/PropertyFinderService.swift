@@ -1,44 +1,31 @@
+// PropertyFinderService.swift
 import Foundation
 import Combine
 
-// MARK: - PropertyService
-@MainActor
-final class PropertyService: ObservableObject {
-    @Published var listings: [Property] = []
-    @Published var isLoading = false
-    @Published var errorMessage: String?
+final class PropertyFinderService: ObservableObject {
+    @Published private(set) var listings: [Property] = []
 
-    private var cancellables = Set<AnyCancellable>()
-
-    // MARK: - Public API
-    func fetchXsiteProperties(limit: Int = 20) {
-        guard !isLoading else { return }
-        isLoading = true
-        errorMessage = nil
-
-        // Use the PropertyFinderService stub to simulate fetching.
-        let finder = PropertyFinderService()
-        finder.fetchProperties(limit: limit) { [weak self] result in
-            DispatchQueue.main.async {
-                guard let self else { return }
-                switch result {
-                case .success(let properties):
-                    self.listings = properties
-                    self.isLoading = false
-                case .failure(let error):
-                    self.errorMessage = error.localizedDescription
-                    // Provide fallback data so the UI still shows something.
-                    self.useFallbackData(reason: error.localizedDescription)
-                    self.isLoading = false
-                }
-            }
+    // Completion-based API used by PropertyService.fetchXsiteProperties(limit:)
+    func fetchProperties(limit: Int = 20, completion: @escaping (Result<[Property], Error>) -> Void) {
+        // Simulate a network delay and return mock data
+        let data = Self.sampleProperties()
+        let limited = Array(data.prefix(limit))
+        DispatchQueue.global().asyncAfter(deadline: .now() + 0.3) {
+            completion(.success(limited))
         }
     }
 
-    // MARK: - Fallback data for offline/testing
-    private func useFallbackData(reason: String) {
-        print("⚠️ Using fallback data because: \(reason)")
-        self.listings = [
+    // Async API used by PropertyService.fetchFinderProperties(using:)
+    @MainActor
+    func fetchProperties() async {
+        // Simulate a network delay and then set listings
+        try? await Task.sleep(nanoseconds: 300_000_000)
+        self.listings = Self.sampleProperties()
+    }
+
+    // MARK: - Sample data
+    private static func sampleProperties() -> [Property] {
+        return [
             Property(
                 id: 1,
                 title: "Modern 2BR Apartment",

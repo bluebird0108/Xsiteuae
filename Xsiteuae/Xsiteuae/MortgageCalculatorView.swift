@@ -1,82 +1,85 @@
 import SwiftUI
 
 struct MortgageCalculatorView: View {
-    @State private var propertyPrice: Double = 2_000_000
-    @State private var downPaymentPct: Double = 20
-    @State private var annualRatePct: Double = 4.25
-    @State private var years: Double = 25
-
-    private var loanAmount: Double {
-        propertyPrice * (1 - downPaymentPct / 100)
-    }
+    @State private var propertyPrice: Double = 1000000
+    @State private var downPayment: Double = 200000
+    @State private var interestRate: Double = 4.0
+    @State private var loanTerm: Double = 25
 
     private var monthlyPayment: Double {
-        let r = (annualRatePct / 100) / 12
-        let n = years * 12
-        guard r > 0 else { return loanAmount / n }
-        return loanAmount * (r * pow(1 + r, n)) / (pow(1 + r, n) - 1)
+        let principal = propertyPrice - downPayment
+        let monthlyRate = interestRate / 100 / 12
+        let months = loanTerm * 12
+        let numerator = principal * monthlyRate * pow(1 + monthlyRate, months)
+        let denominator = pow(1 + monthlyRate, months) - 1
+        return numerator / denominator
     }
 
     var body: some View {
-        ZStack {
-            AnimatedGradientBackground()
+        NavigationStack {
+            ZStack {
+                AnimatedGradientBackground()
 
-            Form {
-                Section(header: Text("Inputs")) {
-                    HStack {
-                        Text("Property Price")
-                        Spacer()
-                        Text("AED \(Int(propertyPrice).formattedWithSeparator())")
-                            .foregroundColor(.secondary)
-                    }
-                    Slider(value: $propertyPrice, in: 300_000...10_000_000, step: 50_000)
+                VStack(spacing: 20) {
+                    Text("Mortgage Calculator")
+                        .font(.title.bold())
+                        .foregroundColor(.white)
+                        .padding(.top, 30)
 
-                    HStack {
-                        Text("Down Payment")
-                        Spacer()
-                        Text("\(Int(downPaymentPct))%")
-                            .foregroundColor(.secondary)
-                    }
-                    Slider(value: $downPaymentPct, in: 0...50, step: 1)
+                    VStack(alignment: .leading, spacing: 16) {
+                        HStack {
+                            Text("Property Price")
+                                .foregroundColor(.white)
+                            Spacer()
+                            Text("AED \(Int(propertyPrice))")
+                                .foregroundColor(.white.opacity(0.8))
+                        }
+                        Slider(value: $propertyPrice, in: 200000...5000000, step: 10000)
 
-                    HStack {
-                        Text("Rate (p.a.)")
-                        Spacer()
-                        Text("\(annualRatePct, specifier: "%.2f")%")
-                            .foregroundColor(.secondary)
-                    }
-                    Slider(value: $annualRatePct, in: 1...10, step: 0.05)
+                        HStack {
+                            Text("Down Payment")
+                                .foregroundColor(.white)
+                            Spacer()
+                            Text("AED \(Int(downPayment))")
+                                .foregroundColor(.white.opacity(0.8))
+                        }
+                        Slider(value: $downPayment, in: 0...propertyPrice, step: 5000)
 
-                    HStack {
-                        Text("Tenure (years)")
-                        Spacer()
-                        Text("\(Int(years))")
-                            .foregroundColor(.secondary)
-                    }
-                    Slider(value: $years, in: 5...30, step: 1)
-                }
+                        HStack {
+                            Text("Interest Rate: \(String(format: "%.2f", interestRate))%")
+                                .foregroundColor(.white)
+                            Spacer()
+                        }
+                        Slider(value: $interestRate, in: 1...10, step: 0.1)
 
-                Section(header: Text("Results")) {
-                    HStack {
-                        Text("Loan Amount")
-                        Spacer()
-                        Text("AED \(Int(loanAmount).formattedWithSeparator())")
-                            .foregroundColor(Theme.goldAccent)
+                        HStack {
+                            Text("Loan Term: \(Int(loanTerm)) years")
+                                .foregroundColor(.white)
+                            Spacer()
+                        }
+                        Slider(value: $loanTerm, in: 5...30, step: 1)
                     }
-                    HStack {
-                        Text("Monthly Payment")
-                        Spacer()
-                        Text("AED \(Int(monthlyPayment).formattedWithSeparator())")
-                            .foregroundColor(Theme.goldAccent)
-                            .fontWeight(.semibold)
-                    }
-                }
+                    .padding(.horizontal)
 
-                Section(footer: Text("Figures are estimates only and do not constitute financial advice.")) {
-                    EmptyView()
+                    VStack(spacing: 10) {
+                        Text("Estimated Monthly Payment")
+                            .font(.headline)
+                            .foregroundColor(.white.opacity(0.8))
+                        Text("AED \(Int(monthlyPayment))")
+                            .font(.largeTitle.bold())
+                            .foregroundColor(.white)
+                    }
+
+                    Spacer()
+
+                    Text("Developed by Faraz Kazmi")
+                        .font(.footnote)
+                        .foregroundColor(.white.opacity(0.8))
+                        .padding(.bottom, 30)
                 }
             }
-            .scrollContentBackground(.hidden)
+            .navigationTitle("Mortgage Calculator")
+            .navigationBarTitleDisplayMode(.inline)
         }
     }
 }

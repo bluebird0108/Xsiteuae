@@ -1,32 +1,32 @@
 import SwiftUI
 
 struct OffPlanProjectsView: View {
-    let developers: [Developer] = [
-        Developer(name: "Emaar", logo: "🏙", description: "Luxury communities like Downtown Dubai, Arabian Ranches, and Dubai Hills Estate."),
-        Developer(name: "DAMAC", logo: "🏗", description: "Known for stylish high-end developments and golf community villas."),
-        Developer(name: "Sobha Realty", logo: "🏡", description: "Premium waterfront residences in Sobha Hartland and Sobha One."),
-        Developer(name: "Meraas", logo: "🌆", description: "Creator of iconic projects like City Walk, Bluewaters Island, and La Mer."),
-        Developer(name: "Nakheel", logo: "🏖", description: "Developer of Palm Jumeirah and Jumeirah Islands."),
-        Developer(name: "Ellington", logo: "🏢", description: "Boutique luxury developer known for contemporary interiors."),
-        Developer(name: "Azizi", logo: "🏘", description: "Affordable luxury apartments across Dubai’s top communities.")
+    let devList: [DevInfo] = [
+        DevInfo(name: "Emaar", icon: "🏙", details: "Luxury communities like Downtown Dubai, Arabian Ranches, and Dubai Hills Estate."),
+        DevInfo(name: "DAMAC", icon: "🏗", details: "Known for high-end apartments and branded villas."),
+        DevInfo(name: "Sobha Realty", icon: "🏡", details: "Premium waterfront residences in Sobha Hartland and Sobha One."),
+        DevInfo(name: "Meraas", icon: "🌆", details: "Iconic projects like City Walk, Bluewaters Island, and La Mer."),
+        DevInfo(name: "Nakheel", icon: "🏖", details: "Developer of Palm Jumeirah and Jumeirah Islands."),
+        DevInfo(name: "Ellington", icon: "🏢", details: "Boutique luxury developer with creative architecture."),
+        DevInfo(name: "Azizi", icon: "🏘", details: "Affordable luxury apartments across Dubai communities.")
     ]
-    
+
     var body: some View {
         ZStack {
             AnimatedGradientBackground()
-            
+
             ScrollView {
                 VStack(spacing: 18) {
                     Text("Off-Plan Projects")
                         .font(.title.bold())
                         .foregroundColor(.white)
                         .padding(.top, 20)
-                    
-                    ForEach(developers, id: \.name) { developer in
-                        DeveloperCard(developer: developer)
+
+                    ForEach(devList, id: \.name) { dev in
+                        DevCard(dev: dev)
                             .padding(.horizontal)
                     }
-                    
+
                     Text("Developed by Faraz Kazmi")
                         .font(.footnote)
                         .foregroundColor(.white.opacity(0.8))
@@ -40,29 +40,30 @@ struct OffPlanProjectsView: View {
     }
 }
 
-// MARK: – Developer Model
-struct Developer {
+// MARK: - Model
+struct DevInfo: Identifiable {
+    let id = UUID()
     let name: String
-    let logo: String
-    let description: String
+    let icon: String
+    let details: String
 }
 
-// MARK: – Developer Card
-struct DeveloperCard: View {
-    let developer: Developer
-    
+// MARK: - Developer Card
+struct DevCard: View {
+    let dev: DevInfo
+
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
             HStack {
-                Text(developer.logo)
+                Text(dev.icon)
                     .font(.largeTitle)
-                Text(developer.name)
+                Text(dev.name)
                     .font(.title2.bold())
                     .foregroundColor(.white)
                 Spacer()
             }
-            
-            Text(developer.description)
+
+            Text(dev.details)
                 .font(.body)
                 .foregroundColor(.white.opacity(0.9))
         }
