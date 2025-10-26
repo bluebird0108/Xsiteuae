@@ -2,42 +2,40 @@ import SwiftUI
 
 struct AboutUsView: View {
     var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: 16) {
-                Text("Xsite Real Estate Brokers LLC")
-                    .font(.title)
-                    .fontWeight(.bold)
-                    .padding(.top)
+        ZStack {
+            AnimatedGradientBackground()
 
-                Text("""
-Xsite Real Estate Brokers LLC is a Dubai-based brokerage established in 2023 with over 97 dedicated agents. We specialize in Ready, Off-Plan, and Leasing services across prime locations such as JVC, Meydan, Arjan, and Al Furjan.
+            ScrollView {
+                VStack(alignment: .leading, spacing: 16) {
+                    Text("About Xsite Real Estate")
+                        .font(.title.bold())
+                        .foregroundColor(.white)
 
-Our mission is to connect investors and residents with the best property opportunities in the UAE, ensuring transparency, trust, and exceptional service.
+                    Text("""
+We are a Dubai-based real estate brokerage focused on Ready, Off-Plan, and Leasing across prime communities such as Downtown, Dubai Marina, Business Bay, and Dubai Hills.
 
-Xsite also has a dedicated Maintenance team and offers professional Holiday Homes services for landlords and guests across the UAE.
+We work directly with leading developers like Emaar, DAMAC, Sobha, Nakheel, and Meraas to secure the best inventory for our clients.
 """)
-                .font(.body)
-                .foregroundColor(.secondary)
-                .lineSpacing(6)
+                    .foregroundColor(.white.opacity(0.95))
 
-                Divider().padding(.vertical)
+                    VStack(alignment: .leading, spacing: 8) {
+                        Label("Email: info@xsiteuae.com", systemImage: "envelope.fill")
+                        Label("Phone: +971-5X-XXXXXXX", systemImage: "phone.fill")
+                        Label("Dubai, United Arab Emirates", systemImage: "mappin.and.ellipse")
+                    }
+                    .foregroundColor(.white)
 
-                VStack(alignment: .leading, spacing: 8) {
-                    Text("📧 Email: info@xsite.ae")
-                    Text("🌍 Website: www.xsite.ae")
-                    Text("📍 Location: Dubai, United Arab Emirates")
+                    Divider().overlay(Color.white.opacity(0.3))
+
+                    Text("Developed by Faraz Kazmi")
+                        .font(.footnote)
+                        .foregroundColor(.white.opacity(0.85))
+                        .padding(.top, 8)
                 }
-                .font(.subheadline)
-                .foregroundColor(.primary)
+                .padding()
             }
-            .padding()
         }
         .navigationTitle("About Us")
         .navigationBarTitleDisplayMode(.inline)
-        .background(Color(.systemBackground))
     }
-}
-
-#Preview {
-    AboutUsView()
 }

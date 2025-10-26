@@ -1,15 +1,13 @@
 import Foundation
 
-struct Property: Identifiable, Codable {
+struct Property: Identifiable, Hashable {
     let id: Int
     let title: String
     let price: Double
     let location: String
-    let image: String?        // ✅ replaced imageURL → image
-    let bedrooms: Int?
-    let bathrooms: Int?
-    let area: Double?
-    let developerName: String?
-    let developerLogo: String?
-    let link: String?
+    let developer: String
+    let bedrooms: Int = 2
+    let bathrooms: Int = 2
+    let areaSqft: Int = 900
+    let imageName: String? = nil
 }
