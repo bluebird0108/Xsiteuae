@@ -2,33 +2,23 @@ import SwiftUI
 
 struct ContentView: View {
     var body: some View {
-        TabView {
-            // 🏠 Home / Properties
-            HomeView()
-                .tabItem {
-                    Label("Properties", systemImage: "building.2.fill")
-                }
+        VStack {
+            Text("Welcome to Xsite UAE")
+                .font(.title)
+                .fontWeight(.bold)
+                .padding()
 
-            // 👷 Developers Tab
-            DeveloperListView()
-                .tabItem {
-                    Label("Developers", systemImage: "person.3.fill")
-                }
+            Spacer()
 
-            // 🧑‍💼 About Us Tab
-            AboutUsView()
-                .tabItem {
-                    Label("About", systemImage: "info.circle.fill")
-                }
+            Text("Real Estate App by Faraz Kazmi")
+                .font(.subheadline)
+                .foregroundColor(.gray)
 
-            // ⚙️ Settings Tab
-            SettingsView()
-                .tabItem {
-                    Label("Settings", systemImage: "gearshape.fill")
-                }
+            Spacer()
         }
-        .tint(.black) // or use .accentColor(.black) if you target older platforms
-        .background(Color(.systemBackground))
+        .accentColor(.black) // or .white depending on your theme
+        .padding()
+        .background(Color.white)
     }
 }
 
