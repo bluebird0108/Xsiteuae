@@ -27,9 +27,10 @@ jobs:
           xcodebuild -resolvePackageDependencies \
           -project "Xsiteuae.xcodeproj"
 
-      - name: 🧱 Build app for iPhone 17 Pro simulator
+            - name: 🧱 Build app for iPhone 17 Pro simulator
         run: |
           xcodebuild clean build \
+          -project "Xsiteuae.xcodeproj" \
           -scheme "Xsiteuae" \
           -destination 'platform=iOS Simulator,name=iPhone 17 Pro,OS=latest' \
           CODE_SIGNING_ALLOWED=NO
@@ -37,8 +38,10 @@ jobs:
       - name: 🧪 Run unit tests
         run: |
           xcodebuild test \
+          -project "Xsiteuae.xcodeproj" \
           -scheme "Xsiteuae" \
           -destination 'platform=iOS Simulator,name=iPhone 17 Pro,OS=latest'
+
 
       - name: 🧹 Auto-commit shared-scheme updates
         uses: stefanzweifel/git-auto-commit-action@v5
