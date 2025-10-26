@@ -10,24 +10,23 @@ final class PropertyService: ObservableObject {
 
     private var cancellables = Set<AnyCancellable>()
 
-    // MARK: - Fetch from Xsite API
-    func fetchXsiteProperties() {
+    // MARK: - Fetch using PropertyFinderService (replaces missing XsiteAPIService)
+    func fetchXsiteProperties(limit: Int = 20) {
         isLoading = true
         errorMessage = nil
 
-        XsiteAPIService.shared.fetchProperties { [weak self] result in
-            DispatchQueue.main.async {
-                switch result {
-                case .success(let properties):
-                    self?.listings = properties
-                    self?.isLoading = false
-                case .failure(let error):
-                    print("❌ Xsite API Error:", error.localizedDescription)
-                    self?.errorMessage = error.localizedDescription
-                    self?.isLoading = false
-                    // Use fallback if API fails
-                    self?.useFallbackData(reason: error.localizedDescription)
-                }
+        let finder = PropertyFinderService()
+        finder.fetchProperties(limit: limit) { [weak self] (result: Result<[Property], Error>) in
+            switch result {
+            case .success(let properties):
+                self?.listings = properties
+                self?.isLoading = false
+            case .failure(let error):
+                print("❌ Finder Error:", error.localizedDescription)
+                self?.errorMessage = error.localizedDescription
+                self?.isLoading = false
+                // Use fallback if API fails
+                self?.useFallbackData(reason: error.localizedDescription)
             }
         }
     }
