@@ -1,56 +1,53 @@
 import SwiftUI
 
 struct PropertyListView: View {
-    @StateObject private var finder = PropertyFinderService()
+    @StateObject private var service = PropertyService()
 
     var body: some View {
-        NavigationView {
-            ZStack {
-                Color(.systemBackground).ignoresSafeArea()
-
-                if finder.isLoading {
+        NavigationStack {
+            Group {
+                if service.isLoading {
                     VStack(spacing: 12) {
                         ProgressView()
-                            .progressViewStyle(CircularProgressViewStyle())
                         Text("Loading properties...")
                             .foregroundColor(.secondary)
                     }
-                } else if let error = finder.errorMessage, finder.listings.isEmpty {
-                    VStack(spacing: 12) {
+                } else if let error = service.errorMessage, service.listings.isEmpty {
+                    VStack(spacing: 8) {
                         Image(systemName: "exclamationmark.triangle.fill")
-                            .foregroundColor(.orange)
                             .font(.system(size: 40))
-                        Text("Couldn’t load live data")
+                            .foregroundColor(.orange)
+                        Text("Couldn’t load properties")
                             .font(.headline)
                         Text(error)
                             .font(.caption)
                             .foregroundColor(.secondary)
                         Button("Retry") {
-                            Task { await finder.fetchProperties() }
+                            service.fetchXsiteProperties()
                         }
-                        .buttonStyleNeutral()
-                        .padding(.top, 6)
                     }
                     .padding()
                 } else {
-                    ScrollView {
-                        LazyVStack(spacing: 20) {
-                            ForEach(finder.listings) { property in
-                                NavigationLink(destination: PropertyDetailView(property: property)) {
-                                    PropertyCard(property: property)
-                                }
-                                .buttonStyle(PlainButtonStyle())
+                    List(service.listings) { property in
+                        NavigationLink {
+                            PropertyDetailView(property: property)
+                        } label: {
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text(property.title)
+                                    .font(.headline)
+                                Text(property.location)
+                                    .font(.subheadline)
+                                    .foregroundColor(.secondary)
                             }
                         }
-                        .padding()
                     }
+                    .listStyle(.insetGrouped)
                 }
             }
             .navigationTitle("Properties")
-            .navigationBarTitleDisplayMode(.large)
         }
         .task {
-            await finder.fetchProperties()
+            service.fetchXsiteProperties()
         }
     }
 }

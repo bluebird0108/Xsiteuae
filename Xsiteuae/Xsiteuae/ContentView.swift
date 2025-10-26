@@ -3,10 +3,7 @@ import SwiftUI
 struct ContentView: View {
     var body: some View {
         TabView {
-            // 🏠 Home / Properties Tab
-            PropertyListView()
-                .tabItem {
-                    Label("Properties", systemImage: "building.2.fill")
+            // 🏠 Home / PropertiesLabel("Properties", systemImage: "building.2.fill")
                 }
 
             // 👷 Developers Tab
@@ -19,6 +16,12 @@ struct ContentView: View {
             AboutUsView()
                 .tabItem {
                     Label("About", systemImage: "info.circle.fill")
+                }
+
+            // ⚙️ Settings Tab
+            SettingsView()
+                .tabItem {
+                    Label("Settings", systemImage: "gearshape.fill")
                 }
         }
         .accentColor(.black) // or .white depending on theme
