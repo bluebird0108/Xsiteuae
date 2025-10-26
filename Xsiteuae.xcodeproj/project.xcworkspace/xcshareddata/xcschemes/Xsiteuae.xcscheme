@@ -18,7 +18,7 @@
                BlueprintIdentifier = "D03740FB2EAAACE8008A87FE"
                BuildableName = "Xsiteuae.app"
                BlueprintName = "Xsiteuae"
-               ReferencedContainer = "container:Xsiteuae.xcodeproj">
+               ReferencedContainer = "container:">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -38,7 +38,7 @@
                BlueprintIdentifier = "D037410A2EAAACEA008A87FE"
                BuildableName = "XsiteuaeTests.xctest"
                BlueprintName = "XsiteuaeTests"
-               ReferencedContainer = "container:Xsiteuae.xcodeproj">
+               ReferencedContainer = "container:">
             </BuildableReference>
          </TestableReference>
          <TestableReference
@@ -49,7 +49,7 @@
                BlueprintIdentifier = "D03741142EAAACEA008A87FE"
                BuildableName = "XsiteuaeUITests.xctest"
                BlueprintName = "XsiteuaeUITests"
-               ReferencedContainer = "container:Xsiteuae.xcodeproj">
+               ReferencedContainer = "container:">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -71,7 +71,7 @@
             BlueprintIdentifier = "D03740FB2EAAACE8008A87FE"
             BuildableName = "Xsiteuae.app"
             BlueprintName = "Xsiteuae"
-            ReferencedContainer = "container:Xsiteuae.xcodeproj">
+            ReferencedContainer = "container:">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -88,7 +88,7 @@
             BlueprintIdentifier = "D03740FB2EAAACE8008A87FE"
             BuildableName = "Xsiteuae.app"
             BlueprintName = "Xsiteuae"
-            ReferencedContainer = "container:Xsiteuae.xcodeproj">
+            ReferencedContainer = "container:">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

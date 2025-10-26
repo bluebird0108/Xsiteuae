@@ -8,84 +8,23 @@ final class PropertyFinderService: ObservableObject {
     @Published var isLoading = false
     @Published var errorMessage: String?
 
-    private let baseURL = "https://api.propertyfinder.ae/v1/property"
-
-    // MARK: - Load API Key from Config.plist (non-fatal if missing)
-    private func getAPIKey(for keyName: String) -> String? {
-        guard
-            let path = Bundle.main.path(forResource: "Config", ofType: "plist"),
-            let dict = NSDictionary(contentsOfFile: path),
-            let key = dict[keyName] as? String,
-            !key.isEmpty
-        else {
-            return nil
-        }
-        return key
-    }
-
-    // MARK: - Fetch properties
+    // MARK: - Offline: Fetch properties from demo data only
     func fetchProperties(limit: Int = 20) async {
         await MainActor.run {
             self.isLoading = true
             self.errorMessage = nil
         }
 
-        guard let apiKey = getAPIKey(for: "PROPERTY_FINDER_API_KEY"),
-              let url = URL(string: "\(baseURL)?limit=\(limit)") else {
-            await MainActor.run {
-                self.errorMessage = "Using demo data"
-                self.isLoading = false
-                self.useFallbackData(reason: "Missing API key or invalid URL")
-            }
-            return
-        }
+        // Simulate a short load to keep UI behavior consistent
+        try? await Task.sleep(nanoseconds: 250_000_000)
 
-        var request = URLRequest(url: url)
-        request.setValue("Bearer \(apiKey)", forHTTPHeaderField: "Authorization")
-        request.setValue("application/json", forHTTPHeaderField: "Accept")
-        request.timeoutInterval = 30
-
-        do {
-            let (data, response) = try await URLSession.shared.data(for: request)
-
-            if let httpResponse = response as? HTTPURLResponse {
-                let preview = String(data: data, encoding: .utf8)?.prefix(800) ?? ""
-                print("PropertyFinder status: \(httpResponse.statusCode)")
-                print("Response preview:\n\(preview)\n---")
+        await MainActor.run {
+            self.useFallbackData(reason: "Offline mode")
+            // If a limit is requested, trim the array
+            if listings.count > limit {
+                listings = Array(listings.prefix(limit))
             }
-
-            guard let httpResponse = response as? HTTPURLResponse,
-                  (200...299).contains(httpResponse.statusCode) else {
-                throw URLError(.badServerResponse)
-            }
-
-            // Attempt to decode as a top-level array of Property.
-            do {
-                let decoded = try JSONDecoder().decode([Property].self, from: data)
-                await MainActor.run {
-                    self.listings = decoded
-                    self.isLoading = false
-                }
-            } catch {
-                // Log some helpful info and fall back.
-                print("Decoding error: \(error)")
-                if let jsonObject = try? JSONSerialization.jsonObject(with: data),
-                   let json = jsonObject as? [String: Any] {
-                    print("Top-level keys: \(Array(json.keys))")
-                }
-                await MainActor.run {
-                    self.errorMessage = "Using demo data"
-                    self.isLoading = false
-                    self.useFallbackData(reason: "Decoding failed: \(error.localizedDescription)")
-                }
-            }
-        } catch {
-            await MainActor.run {
-                print("Network error: \(error)")
-                self.errorMessage = "Using demo data"
-                self.isLoading = false
-                self.useFallbackData(reason: error.localizedDescription)
-            }
+            self.isLoading = false
         }
     }
 

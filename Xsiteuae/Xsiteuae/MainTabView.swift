@@ -17,6 +17,13 @@ struct MainTabView: View {
                     Text("Properties")
                 }
 
+            // ⭐️ Favorites (new)
+            FavoritesView()
+                .tabItem {
+                    Image(systemName: "star.fill")
+                    Text("Favorites")
+                }
+
             // 👥 Meet Our Team
             TeamView()
                 .tabItem {
@@ -31,6 +38,13 @@ struct MainTabView: View {
                     Text("AI")
                 }
 
+            // ⚙️ Settings (new)
+            SettingsView()
+                .tabItem {
+                    Image(systemName: "gearshape.fill")
+                    Text("Settings")
+                }
+
             // 🔐 Login
             LoginView()
                 .tabItem {
@@ -39,6 +53,7 @@ struct MainTabView: View {
                 }
         }
         .tint(.yellow)
+        .preferredColorScheme(.dark)
     }
 }
 
@@ -60,5 +75,4 @@ private struct TeamView: View {
             .navigationTitle("Team")
         }
     }
-    
 }

@@ -2,7 +2,15 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>EZAZt.Ej2L3NYUcV9nqdLjYMPS|MASE8xPGvfh7V</key>
-	<string>PROPERTY_FINDER_API_KEY</string>
+	<key>SchemeUserState</key>
+	<dict>
+		<key>Xsiteuae.xcscheme_^#shared#^_</key>
+		<dict>
+			<key>isShown</key>
+			<true/>
+			<key>orderHint</key>
+			<integer>0</integer>
+		</dict>
+	</dict>
 </dict>
 </plist>

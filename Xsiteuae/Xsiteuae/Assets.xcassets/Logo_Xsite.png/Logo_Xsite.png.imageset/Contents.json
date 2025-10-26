@@ -1,7 +1,7 @@
 {
   "images" : [
     {
-      "filename" : "Logo_Xsite.png",
+      "filename" : "xsite_logo 1.png",
       "idiom" : "iphone",
       "scale" : "1x"
     },
@@ -11,7 +11,7 @@
       "scale" : "2x"
     },
     {
-      "filename" : "Logo_Xsite 1.png",
+      "filename" : "xsite_logo 2.png",
       "idiom" : "iphone",
       "scale" : "3x"
     }
