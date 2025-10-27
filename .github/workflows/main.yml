@@ -1,52 +1,47 @@
-name: 🏗️ XsiteUAE iOS Auto Build
+name: iOS Build & Auto-Fix
 
 on:
   push:
     branches: [ main ]
   pull_request:
-    branches: [ main ]
   schedule:
-    - cron: '0 3 * * 1'   # Every Monday at 3 AM (UAE time) – weekly auto-build
+    - cron: '0 3 * * 1' # every Monday at 3 AM UTC
 
 jobs:
   build:
-    name: Build XsiteUAE (iPhone 17 Pro)
     runs-on: macos-latest
-
     steps:
-      - name: 📦 Checkout repository
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: 🛠️ Set up latest Xcode
+      - name: Set up latest Xcode
         uses: maxim-lobanov/setup-xcode@v1
         with:
           xcode-version: latest
 
-      - name: ⚙️ Resolve Swift Packages
-        run: |
-          xcodebuild -resolvePackageDependencies \
-          -project "Xsiteuae.xcodeproj"
+      - name: Clean derived data
+        run: rm -rf ~/Library/Developer/Xcode/DerivedData/*
 
-            - name: 🧱 Build app for iPhone 17 Pro simulator
-        run: |
-          xcodebuild clean build \
-          -project "Xsiteuae.xcodeproj" \
-          -scheme "Xsiteuae" \
-          -destination 'platform=iOS Simulator,name=iPhone 17 Pro,OS=latest' \
-          CODE_SIGNING_ALLOWED=NO
+      - name: Resolve Swift packages
+        run: xcodebuild -resolvePackageDependencies
 
-      - name: 🧪 Run unit tests
+      - name: Build XsiteUAE for iPhone 17 Pro
+        run: |
+          xcodebuild -scheme "Xsiteuae" \
+            -destination 'platform=iOS Simulator,name=iPhone 17 Pro,OS=latest' \
+            clean build
+
+      - name: Run tests
         run: |
           xcodebuild test \
-          -project "Xsiteuae.xcodeproj" \
-          -scheme "Xsiteuae" \
-          -destination 'platform=iOS Simulator,name=iPhone 17 Pro,OS=latest'
+            -scheme "Xsiteuae" \
+            -destination 'platform=iOS Simulator,name=iPhone 17 Pro,OS=latest'
 
-
-      - name: 🧹 Auto-commit shared-scheme updates
-        uses: stefanzweifel/git-auto-commit-action@v5
+      - name: Auto commit dependency updates
+        uses: peter-evans/create-pull-request@v5
         with:
-          commit_message: "🔄 Auto-update: Shared scheme / build settings"
+          commit-message: "Auto-fix: updated dependencies and rebuilt project"
+          title: "Auto-fix build issues"
+          body: "This pull request includes automatic fixes and dependency updates."
+          branch: auto-fix/build
 
-      - name: ✅ Status
-        run: echo "✅ Build completed successfully for XsiteUAE (iPhone 17 Pro)"
