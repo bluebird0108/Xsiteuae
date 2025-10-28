@@ -1,31 +1,73 @@
-// PropertyFinderService.swift
 import Foundation
-import Combine
+import SwiftUI
+import Combine   // ✅ REQUIRED for @Published and ObservableObject
 
+@MainActor
 final class PropertyFinderService: ObservableObject {
-    @Published private(set) var listings: [Property] = []
+    @Published var listings: [Property] = []
+    @Published var isLoading = false
+    @Published var errorMessage: String?
 
-    // Completion-based API used by PropertyService.fetchXsiteProperties(limit:)
-    func fetchProperties(limit: Int = 20, completion: @escaping (Result<[Property], Error>) -> Void) {
-        // Simulate a network delay and return mock data
-        let data = Self.sampleProperties()
-        let limited = Array(data.prefix(limit))
-        DispatchQueue.global().asyncAfter(deadline: .now() + 0.3) {
-            completion(.success(limited))
+    private let baseURL = "https://api.propertyfinder.ae/v1/property"
+
+    // MARK: - Load API Key from Config.plist
+    private func getAPIKey(for keyName: String) -> String {
+        guard
+            let path = Bundle.main.path(forResource: "Config", ofType: "plist"),
+            let dict = NSDictionary(contentsOfFile: path),
+            let key = dict[keyName] as? String
+        else {
+            fatalError("❌ Missing \(keyName) in Config.plist")
+        }
+        return key
+    }
+
+    // MARK: - Fetch properties
+    func fetchProperties(limit: Int = 20) async {
+        await MainActor.run {
+            self.isLoading = true
+            self.errorMessage = nil
+        }
+
+        let apiKey = getAPIKey(for: "PROPERTY_FINDER_API_KEY")
+        guard let url = URL(string: "\(baseURL)?limit=\(limit)") else {
+            await MainActor.run {
+                self.errorMessage = "❌ Invalid API URL"
+                self.isLoading = false
+            }
+            return
+        }
+
+        var request = URLRequest(url: url)
+        request.setValue("Bearer \(apiKey)", forHTTPHeaderField: "Authorization")
+        request.timeoutInterval = 30
+
+        do {
+            let (data, response) = try await URLSession.shared.data(for: request)
+            guard let httpResponse = response as? HTTPURLResponse,
+                  httpResponse.statusCode == 200 else {
+                throw URLError(.badServerResponse)
+            }
+
+            let decoded = try JSONDecoder().decode([Property].self, from: data)
+            await MainActor.run {
+                self.listings = decoded
+                self.isLoading = false
+            }
+
+        } catch {
+            print("❌ API Fetch Error:", error.localizedDescription)
+            await MainActor.run {
+                self.errorMessage = "Could not load data, using fallback"
+                self.isLoading = false
+                self.useFallbackData(reason: error.localizedDescription)
+            }
         }
     }
 
-    // Async API used by PropertyService.fetchFinderProperties(using:)
-    @MainActor
-    func fetchProperties() async {
-        // Simulate a network delay and then set listings
-        try? await Task.sleep(nanoseconds: 300_000_000)
-        self.listings = Self.sampleProperties()
-    }
-
-    // MARK: - Sample data
-    private static func sampleProperties() -> [Property] {
-        return [
+    // MARK: - Fallback demo data
+    private func useFallbackData(reason: String) {
+        self.listings = [
             Property(
                 id: 1,
                 title: "Modern 2BR Apartment",
@@ -66,5 +108,20 @@ final class PropertyFinderService: ObservableObject {
                 link: "https://xsite.ae/property/1003"
             )
         ]
+    }
+
+    // MARK: - Compatibility (completion-based)
+    func fetchProperties(limit: Int = 20, completion: @escaping (Result<[Property], Error>) -> Void) {
+        Task {
+            await fetchProperties(limit: limit)
+            if let message = self.errorMessage {
+                let err = NSError(domain: "PropertyFinderService",
+                                  code: -1,
+                                  userInfo: [NSLocalizedDescriptionKey: message])
+                completion(.failure(err))
+            } else {
+                completion(.success(self.listings))
+            }
+        }
     }
 }

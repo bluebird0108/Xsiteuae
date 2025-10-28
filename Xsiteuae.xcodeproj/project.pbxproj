@@ -6,6 +6,10 @@
 	objectVersion = 90;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		D0EC45E92EB0F8EC0079C252 /* info.plist in Resources */ = {isa = PBXBuildFile; fileRef = D0EC45CD2EB0F8EC0079C252 /* info.plist */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		D037410C2EAAACEA008A87FE /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -27,11 +31,25 @@
 		D03740FC2EAAACE8008A87FE /* Xsiteuae.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Xsiteuae.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D037410B2EAAACEA008A87FE /* XsiteuaeTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = XsiteuaeTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D03741152EAAACEA008A87FE /* XsiteuaeUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = XsiteuaeUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		D0EC45CD2EB0F8EC0079C252 /* info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		D0EC444E2EB0EB630079C252 /* Exceptions for "Xsiteuae" folder in "Xsiteuae" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Xsiteuae/Config.plist,
+			);
+			target = D03740FB2EAAACE8008A87FE /* Xsiteuae */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		D03740FE2EAAACE8008A87FE /* Xsiteuae */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				D0EC444E2EB0EB630079C252 /* Exceptions for "Xsiteuae" folder in "Xsiteuae" target */,
+			);
 			path = Xsiteuae;
 			sourceTree = "<group>";
 		};
@@ -59,6 +77,7 @@
 		D03740F32EAAACE8008A87FE = {
 			isa = PBXGroup;
 			children = (
+				D0EC45CD2EB0F8EC0079C252 /* info.plist */,
 				D03740FE2EAAACE8008A87FE /* Xsiteuae */,
 				D03740FD2EAAACE8008A87FE /* Products */,
 			);
@@ -180,6 +199,7 @@
 		D03740FA2EAAACE8008A87FE /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			files = (
+				D0EC45E92EB0F8EC0079C252 /* info.plist in Resources */,
 			);
 		};
 		D03741092EAAACEA008A87FE /* Resources */ = {
@@ -229,7 +249,7 @@
 		D037411D2EAAACEA008A87FE /* Debug configuration for PBXProject "Xsiteuae" */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
+				ALWAYS_SEARCH_USER_PATHS = YES;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
@@ -279,7 +299,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				INFOPLIST_FILE = "yes
+				INFOPLIST_FILE = Xsiteuae/Xsiteuae/Info.plist
 ";
 				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
@@ -296,7 +316,7 @@
 		D037411E2EAAACEA008A87FE /* Release configuration for PBXProject "Xsiteuae" */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
+				ALWAYS_SEARCH_USER_PATHS = YES;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
@@ -340,7 +360,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				INFOPLIST_FILE = "yes
+				INFOPLIST_FILE = Xsiteuae/Xsiteuae/Info.plist
 ";
 				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
@@ -365,9 +385,7 @@
 				DEVELOPMENT_TEAM = N2TS645F4D;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = "Xsiteuae/Xsiteuae/Info.plist\n";
 				INFOPLIST_KEY_CFBundleDisplayName = Xsiteaue;
-				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.business";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = NO;
@@ -405,9 +423,7 @@
 				DEVELOPMENT_TEAM = N2TS645F4D;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = "Xsiteuae/Xsiteuae/Info.plist\n";
 				INFOPLIST_KEY_CFBundleDisplayName = Xsiteaue;
-				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.business";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = NO;
@@ -444,7 +460,7 @@
 				INFOPLIST_FILE = "XsiteuaeTests/Info.plist\n";
 				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.xsite.xsiteuae;
+				PRODUCT_BUNDLE_IDENTIFIER = com.xsite.Xsiteuae;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = NO;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
@@ -467,7 +483,7 @@
 				INFOPLIST_FILE = "XsiteuaeTests/Info.plist\n";
 				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.xsite.xsiteuae;
+				PRODUCT_BUNDLE_IDENTIFIER = com.xsite.Xsiteuae;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = NO;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
